@@ -200,14 +200,24 @@ WHERE productid = '5X2';
 INSERT INTO product VALUES('5X2', 'Action Sandal', 70.00, 'PG', 'FW');
 
 -- 21  update the price of '5X2', 'Action Sandal' by $10.00
-update;
+UPDATE product
+SET productprice = productprice + 10
+WHERE productid = '5X2';
 
 -- 22 increase the price of all products in the 'CY' category by 5%
-update;
+UPDATE product
+SET productprice = productprice + (productprice * 0.05)
+WHERE categoryid = 'CY';
 
 -- 23 decrease the price of all products made by vendorname 'Pacifica Gear' by $5.00
-update;
+UPDATE product
+JOIN vendor
+ON product.vendorid = vendor.vendorid
+SET productprice = productprice + 5
+WHERE vendorname = 'Pacifica Gear';
 
 -- 24 List productid and productprice for all products.  Sort by productid;
-select 24;
+SELECT productid, productprice
+FROM product
+ORDER BY productid;
 
