@@ -67,35 +67,6 @@ CREATE TABLE includes
 	FOREIGN KEY (productid) REFERENCES product(productid),
 	FOREIGN KEY (tid) REFERENCES salestransaction(tid) );
     
-CREATE TABLE company 
-(	companyid CHAR(3)		NOT NULL,
-    companyname VARCHAR(50)	NOT NULL,
-    ceo VARCHAR(50)			NOT NULL,
-    PRIMARY KEY (companyid) ); 
-    
-CREATE TABLE security
-(	secid CHAR(2)		NOT NULL,
-    secname VARCHAR(50)	NOT NULL,
-    sectype VARCHAR(10)	NOT NULL,
-    PRIMARY KEY (secid) );
-
-CREATE TABLE fund
-(	companyid CHAR(3)	NOT NULL,
-	inceptiondate DATE	NOT NULL,
-    fundid CHAR(2)		NOT NULL,
-    fundname VARCHAR(30)	NOT NULL,
-    PRIMARY KEY (fundid),
-    FOREIGN KEY (companyid) REFERENCES company(companyid) );
-    
-CREATE TABLE holdings
-(	fundid CHAR(2)	NOT NULL,
-	secid CHAR(2)	NOT NULL,
-    quantity INT	NOT NULL,
-    PRIMARY KEY (fundid, secid),
-    FOREIGN KEY (fundid) REFERENCES fund(fundid),
-    FOREIGN KEY (secid) REFERENCES security(secid) );
-    
-    
 /* ZAGIMORE - INSERT INTO statements  			*/
 
 INSERT INTO vendor VALUES ('PG','Pacifica Gear');
@@ -236,33 +207,3 @@ INSERT INTO includes VALUES ('3X3','T011',3);
 INSERT INTO includes VALUES ('4X3','T022',3);
 INSERT INTO includes VALUES ('2X2','T022',3);
 INSERT INTO includes VALUES ('5X1','T022',2);
-
-INSERT INTO company VALUES ('ACF', 'Acme Finance', 'Mike Dempsey');
-INSERT INTO company VALUES ('TCA', 'Tara Capital', 'Ava Newton');
-INSERT INTO company VALUES ('ALB', 'Albritton', 'Lena Dollar');
-
-INSERT INTO security VALUES ('AE', 'Abhi Engineering', 'Stock');
-INSERT INTO security VALUES ('BH', 'Blues Health', 'Stock');
-INSERT INTO security VALUES ('CM', 'County Municipality', 'Bond');
-INSERT INTO security VALUES ('DU', 'Downtown Utility', 'Bond');
-INSERT INTO security VALUES ('EM', 'Emmit Machines', 'Stock');
-
-INSERT INTO fund VALUES ('ACF', '2005-01-01', 'BG', 'Big Growth');
-INSERT INTO fund VALUES ('ACF', '2006-01-01', 'SG', 'Steady Growth');
-INSERT INTO fund VALUES ('TCA', '2005-01-01', 'LF', 'Tiger Fund');
-INSERT INTO fund VALUES ('TCA', '2006-01-01', 'OF', 'Owl Fund');
-INSERT INTO fund VALUES ('ALB', '2005-01-01', 'JU', 'Jupiter');
-INSERT INTO fund VALUES ('ALB', '2006-01-01', 'SA', 'Saturn');
-
-INSERT INTO holdings VALUES ('BG', 'AE', 500); 
-INSERT INTO holdings VALUES ('BG', 'EM', 300);
-INSERT INTO holdings VALUES ('SG', 'AE', 300);  
-INSERT INTO holdings VALUES ('SG', 'DU', 300); 
-INSERT INTO holdings VALUES ('LF', 'EM', 1000); 
-INSERT INTO holdings VALUES ('LF', 'BH', 1000); 
-INSERT INTO holdings VALUES ('OF', 'CM', 1000); 
-INSERT INTO holdings VALUES ('OF', 'DU', 1000); 
-INSERT INTO holdings VALUES ('JU', 'EM', 2000); 
-INSERT INTO holdings VALUES ('JU', 'DU', 1000); 
-INSERT INTO holdings VALUES ('SA', 'EM', 1000);
-INSERT INTO holdings VALUES ('SA', 'DU', 2000); 

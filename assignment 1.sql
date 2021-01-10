@@ -119,16 +119,29 @@ ORDER BY salestransaction.tid;
 -- create table company with columns
 --    companyid char(3), name varchar(50), ceo varchar(50)
 --    make column companyid the primary key
+CREATE TABLE company 
+(	companyid CHAR(3)		NOT NULL,
+    companyname VARCHAR(50)	NOT NULL,
+    ceo VARCHAR(50)			NOT NULL,
+    PRIMARY KEY (companyid) ); 
 
 -- insert the following data 
 --    companyid   name          ceo
 --    ACF         Acme Finance  Mike Dempsey
 --    TCA         Tara Capital  Ava Newton
 --    ALB         Albritton     Lena Dollar
+INSERT INTO company VALUES ('ACF', 'Acme Finance', 'Mike Dempsey');
+INSERT INTO company VALUES ('TCA', 'Tara Capital', 'Ava Newton');
+INSERT INTO company VALUES ('ALB', 'Albritton', 'Lena Dollar');
 
 -- create a table security with columns
 --     secid, name, type
 --     secid should be the primary key
+CREATE TABLE security
+(	secid CHAR(2)		NOT NULL,
+    secname VARCHAR(50)	NOT NULL,
+    sectype VARCHAR(10)	NOT NULL,
+    PRIMARY KEY (secid) );
 
 -- insert the following data
 --    secid    name                type
@@ -137,11 +150,23 @@ ORDER BY salestransaction.tid;
 --    CM       County Municipality Bond
 --    DU       Downtown Utlity     Bond
 --    EM       Emmitt Machines     Stock
+INSERT INTO security VALUES ('AE', 'Abhi Engineering', 'Stock');
+INSERT INTO security VALUES ('BH', 'Blues Health', 'Stock');
+INSERT INTO security VALUES ('CM', 'County Municipality', 'Bond');
+INSERT INTO security VALUES ('DU', 'Downtown Utility', 'Bond');
+INSERT INTO security VALUES ('EM', 'Emmit Machines', 'Stock');
 
 -- create the following table called fund 
 --  with columns companyid, inceptiondate, fundid, name
 --   fundid should be the primary key
 --   companyid should be a foreign key referring to the company table.
+CREATE TABLE fund
+(	companyid CHAR(3)	NOT NULL,
+	inceptiondate DATE	NOT NULL,
+    fundid CHAR(2)		NOT NULL,
+    fundname VARCHAR(30)	NOT NULL,
+    PRIMARY KEY (fundid),
+    FOREIGN KEY (companyid) REFERENCES company(companyid) );
 
 -- CompanyID  InceptionDate   FundID Name
 --    ACF      2005-01-01     BG     Big Growth
@@ -150,12 +175,26 @@ ORDER BY salestransaction.tid;
 --    TCA      2006-01-01     OF     Owl Fund
 --    ALB      2005-01-01     JU     Jupiter
 --    ALB      2006-01-01     SA     Saturn
+INSERT INTO fund VALUES ('ACF', '2005-01-01', 'BG', 'Big Growth');
+INSERT INTO fund VALUES ('ACF', '2006-01-01', 'SG', 'Steady Growth');
+INSERT INTO fund VALUES ('TCA', '2005-01-01', 'LF', 'Tiger Fund');
+INSERT INTO fund VALUES ('TCA', '2006-01-01', 'OF', 'Owl Fund');
+INSERT INTO fund VALUES ('ALB', '2005-01-01', 'JU', 'Jupiter');
+INSERT INTO fund VALUES ('ALB', '2006-01-01', 'SA', 'Saturn');
+
 
 -- create table holdings with columns
 --   fundid, secid, quantity
 --   make (fundid, secid) the primary key
 --   fundid is also a foreign key referring to the fund  table
 --   secid is also a foreign key referring to the security table
+CREATE TABLE holdings
+(	fundid CHAR(2)	NOT NULL,
+	secid CHAR(2)	NOT NULL,
+    quantity INT	NOT NULL,
+    PRIMARY KEY (fundid, secid),
+    FOREIGN KEY (fundid) REFERENCES fund(fundid),
+    FOREIGN KEY (secid) REFERENCES security(secid) );
 
 --    fundid   secid    quantity
 --     BG       AE           500
@@ -170,6 +209,18 @@ ORDER BY salestransaction.tid;
 --     JU       DU          1000
 --     SA       EM          1000
 --     SA       DU          2000
+INSERT INTO holdings VALUES ('BG', 'AE', 500); 
+INSERT INTO holdings VALUES ('BG', 'EM', 300);
+INSERT INTO holdings VALUES ('SG', 'AE', 300);  
+INSERT INTO holdings VALUES ('SG', 'DU', 300); 
+INSERT INTO holdings VALUES ('LF', 'EM', 1000); 
+INSERT INTO holdings VALUES ('LF', 'BH', 1000); 
+INSERT INTO holdings VALUES ('OF', 'CM', 1000); 
+INSERT INTO holdings VALUES ('OF', 'DU', 1000); 
+INSERT INTO holdings VALUES ('JU', 'EM', 2000); 
+INSERT INTO holdings VALUES ('JU', 'DU', 1000); 
+INSERT INTO holdings VALUES ('SA', 'EM', 1000);
+INSERT INTO holdings VALUES ('SA', 'DU', 2000); 
 
 
 -- 15 Use alter table command to add a column "price" to the 
@@ -182,6 +233,7 @@ ADD price NUMERIC(7, 2);
 --    You must drop them in a certain order.
 DROP TABLE holdings; 
 DROP TABLE security;
+DROP TABLE fund;
 DROP TABLE company;
 
 
@@ -190,7 +242,11 @@ DELETE FROM product
 WHERE productid = '5X1';
 
 -- 18 Explain why does the delete in question 17 fails.
+-- the output states: "cannot delete or update a parent row: a foreign constraint fails"
 
+-- the product with the productid '5X1' cannot be deleted because it is
+-- referenced to in the includes table
+-- given this, only a product that has never been sold can be deleted
 
 -- 19 Try to delete the row for prduct with productid '5X2'
 DElETE FROM product
