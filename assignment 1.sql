@@ -66,7 +66,9 @@ ORDER BY productid;
 --   for products in category "Camping" sorted by ProductID
 SELECT productid, productname, productprice
 FROM product
-WHERE categoryid = 'CP'
+JOIN category
+ON product.categoryid = category.categoryid
+WHERE categoryname = 'Camping'
 ORDER BY productid;
 
 -- 11 Display ProductID, ProductName, ProductPrice  
@@ -89,14 +91,16 @@ SELECT DISTINCT product.productid, product.productname, product.productprice
 FROM vendor
 JOIN product
 ON vendor.vendorid = product.vendorid
+JOIN region
 JOIN store
+ON region.regionid = store.regionid
 JOIN salestransaction
 ON store.storeid = salestransaction.storeid
 JOIN includes
 ON product.productid = includes.productid 
 AND salestransaction.tid = includes.tid
 WHERE vendor.vendorname = 'Pacifica Gear'
-AND store.regionid = 'T';
+AND region.regionname = 'Tristate';
 
 -- 13 Display TID, CustomerName and TDate for any customer buying a product "Easy Boot"
 --    Sorted by TID.
